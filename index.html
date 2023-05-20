@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Tierlist</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1 id="h1-title" class="--mrg-p --wid-p">Gerador de Tierlist</h1>
+
+    <div id="container" class="--mrg-p --wid-p">
+        <div class="ranking-container" draggable="true">
+            <div class="ranking-title" contenteditable="true">S+</div>
+            <div class="box-item">
+            </div>
+            <div class="hold"></div>
+        </div>
+        <div class="ranking-container" draggable="true">
+            <div class="ranking-title">A</div>
+            <div class="box-item">
+            </div>
+            <div class="hold"></div>
+        </div>
+        <div class="ranking-container" draggable="true">
+            <div class="ranking-title">B</div>
+            <div class="box-item">
+            </div>
+            <div class="hold"></div>
+        </div>
+        <div class="ranking-container" draggable="true">
+            <div class="ranking-title">C</div>
+            <div class="box-item">
+            </div>
+            <div class="hold"></div>
+        </div>
+        <div class="ranking-container" draggable="true">
+            <div class="ranking-title">D</div>
+            <div class="box-item">
+            </div>
+            <div class="hold"></div>
+        </div>
+    </div>
+
+    <div id="neutral-zone" class="--mrg-p --wid-p"></div>
+
+    <label for="inp-img-upload" id="lbl-img-upload" class="--mrg-p --wid-p">
+        <h2 id="img-upload-placeholder">toque ou solte as imagens aqui para envia-las a página</h2>
+        <input type="file" id="inp-img-upload" accept="image/*" multiple>
+    </label>
+
+    <script src="js/script.js" type="module"></script>
+</body>
+</html>
