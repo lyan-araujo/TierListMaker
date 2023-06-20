@@ -15,6 +15,21 @@
 
 body {
     width: max(100vw, 25rem);
+    pointer-events: all;
+}
+
+body:has(ranking-editor.open) {
+    pointer-events: none;
+}
+
+ranking-editor {
+    display: none;
+    pointer-events: none;
+}
+
+ranking-editor.open {
+    display: block;
+    pointer-events: all;
 }
 
 /* id */
@@ -24,7 +39,7 @@ body {
 }
 
 #tierlist-container {    
-    --item-size: 3.4rem;
+    --item-size: 5rem;
 
     display: flex;
     border-collapse: collapse;

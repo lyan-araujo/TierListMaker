@@ -1,6 +1,7 @@
 import { ItemImg } from "./components/item-img.js";
 import { RankingLine } from "./components/ranking-line.js";
 import { TierslistContainer } from "./tierlist-container.js";
+import { RankingEditor } from "./components/ranking-editor.js";
 
 
 const inp_img_upload    = document.querySelector('#inp-img-upload');
@@ -28,3 +29,4 @@ window.ondrop   = (ev) => {
 customElements.define('item-img', ItemImg);
 customElements.define('ranking-line', RankingLine);
 TierslistContainer.TierlistContainerClassAttribute();
+customElements.define('ranking-editor', RankingEditor);

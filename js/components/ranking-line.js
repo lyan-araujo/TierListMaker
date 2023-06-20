@@ -34,13 +34,36 @@ export class RankingLine extends HTMLElement {
         }
     }
 
+    async lineUpdate(r_title) {
+
+        const ranking_editor    = document.querySelector('ranking-editor');
+        const title = r_title.querySelector('.title_text');
+
+
+        ranking_editor.updateValue(title.textContent).then((result) => {
+            title.textContent  = result;
+        });
+    }
+
     getTemplate() {
         const r_line    = document.createElement('div');
         r_line.classList.add('ranking-line');
 
         const r_title   = document.createElement('div');
+        r_title.lang    = 'pt-br';
         r_title.classList.add('ranking-title');
-        r_title.textContent = this.dataset.title ?? '[title]';
+        r_title.ondblclick  = () => this.lineUpdate(r_title);
+        
+        const menu_dots = document.createElement('i');
+        menu_dots.classList.add('menu_dots');
+        // menu_dots.style.color   = '#bdbfc1';
+        menu_dots.innerHTML = '&hellip;';   
+
+        const title_text    = document.createElement('p');
+        title_text.classList.add('title_text');
+        title_text.textContent  = this.dataset.title ?? '[title]';
+        
+        r_title.append(menu_dots, title_text);
 
         const r_container   = document.createElement('div');
         r_container.classList.add('ranking-container');
@@ -63,24 +86,44 @@ export class RankingLine extends HTMLElement {
     getStyle() {
         const style = document.createElement('style');
         style.textContent   = `
+        * {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
         .ranking-line {
             display: grid;
             grid-template-columns: auto 1fr auto;
         }
 
         .ranking-title {
-            display: flex;
+            display: grid;
+            grid-template-rows: auto 1fr;
             width: 5rem;
             min-height: var(--item-size);
             border: .1rem solid var(--cor-1);
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             font-size: large;
-            overflow-x: hidden;
+        }
+        
+        .ranking-title > .menu_dots {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-end;
+            height: .6em;
+            overflow: hidden;
+        }
+
+        .ranking-title > .title_text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
             white-space: break-spaces;
+            word-wrap: break-word;
+            overflow-x: hidden;
             hyphens: auto;
             text-align: center;
+            text-overflow: ellipsis;
         }
 
         .ranking-container {
@@ -96,6 +139,7 @@ export class RankingLine extends HTMLElement {
         .hold {
             width: 2rem;
             border: .1rem solid var(--cor-1);
+        }
         
         `;
 
