@@ -30,17 +30,15 @@ export class ItemImg extends HTMLElement {
         this.id = this._id;
         const styles    = this.getStyles();
         const template  = this.getTemplate();
-    
+
         this.shadowRoot.append(styles, template);
-        this.draggable  = true;
-        this.ondragstart    = this.dragStartEvent;
-        this.ondragend  = this.dragEndEvent;
+        this.createEvents();
+
     }
 
     getTemplate() {
         const div   = document.createElement('div');
         div.classList.add('item-img');
-        div.oncontextmenu   = (ev) => ev.preventDefault();
 
         return div;
     }
@@ -72,6 +70,15 @@ export class ItemImg extends HTMLElement {
         `;
         
         return style;
+    }
+
+    createEvents() {
+        const item_img  = this.shadowRoot.querySelector('.item-img');        
+        
+        item_img.oncontextmenu  = (ev) => ev.preventDefault();
+        this.draggable  = true;
+        this.ondragstart    = this.dragStartEvent;
+        this.ondragend  = this.dragEndEvent;
     }
 
     dragStartEvent(ev) {

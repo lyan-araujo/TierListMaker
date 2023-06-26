@@ -1,16 +1,11 @@
+@import url(palette.css);
+
 * {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
     position: relative;
     user-select: none;
-}
-
-:root {
-    --item-area: 4.5rem;
-
-    --cor-1: #000000;
-    --cor-2: #090909;
 }
 
 body {
@@ -44,7 +39,7 @@ ranking-editor.open {
     display: flex;
     border-collapse: collapse;
     flex-direction: column;
-    min-height: var(--item-area);
+    min-height: var(--item-size);
     border: .1rem solid var(--cor-1);
     background-color: var(--cor-2);
     color: whitesmoke;
@@ -112,7 +107,9 @@ ranking-editor.open {
 }
 
 .dragging {
-    border: .15rem dashed #b3b3b3;
-    filter: drop-shadow(0 0 .5rem white);
-    opacity: .4;
+    --dragging-shadow: white;
+    --dragging-bg: transparent;
+    filter: drop-shadow(0 0 .5rem var(--dragging-shadow));
+    opacity: .6;
+    background-color: var(--dragging-bg);
 }

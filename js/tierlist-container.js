@@ -12,6 +12,9 @@ export class TierslistContainer {
             ev.preventDefault();
             return;
         }
+        const color = dragging.dataset.color;
+
+        dragging.style.setProperty('--dragging-shadow', `${color && color !== 'transparet' ? color : 'white'}`);
 
         let newPosition =   this.getNewPosition(ev.clientY);
 

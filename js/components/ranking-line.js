@@ -24,63 +24,25 @@ export class RankingLine extends HTMLElement {
         const template  = this.getTemplate();
 
         this.shadowRoot.append(styles, template);
-
-        this.ondragstart    = this.dragStartEvent;
-        this.ondragend  = this.dragEndEvent;
-        this.ondragover = (ev) => this.dragOverEvent(ev);
-        this.ondrop = (ev) => {
-            ev.stopPropagation();
-            ev.preventDefault();
-        }
-    }
-
-    async lineUpdate(r_title) {
-
-        const ranking_editor    = document.querySelector('ranking-editor');
-        const title = r_title.querySelector('.title_text');
-
-
-        ranking_editor.updateValue(title.textContent).then((result) => {
-            title.textContent  = result;
-        });
+        this.createEvents();
     }
 
     getTemplate() {
-        const r_line    = document.createElement('div');
-        r_line.classList.add('ranking-line');
+        const container_line    = document.createElement('div');
+        container_line.classList.add('container-line');
 
-        const r_title   = document.createElement('div');
-        r_title.lang    = 'pt-br';
-        r_title.classList.add('ranking-title');
-        r_title.ondblclick  = () => this.lineUpdate(r_title);
-        
-        const menu_dots = document.createElement('i');
-        menu_dots.classList.add('menu_dots');
-        // menu_dots.style.color   = '#bdbfc1';
-        menu_dots.innerHTML = '&hellip;';   
+        container_line.insertAdjacentHTML('beforeend',`
+            <div class='box-title' style='background-color: ${this.dataset.color ?? 'transparent'}' lang='pt-br'>
+                <i class='icon-dots'>&hellip;</i>
+                <p class='p-text'>${this.dataset.title ?? '[title]'}</p>
+            </div>
+            <div class='box-items'>
+                <slot></slot>
+            </div>
+            <div class='hold'></div>
+        `);
 
-        const title_text    = document.createElement('p');
-        title_text.classList.add('title_text');
-        title_text.textContent  = this.dataset.title ?? '[title]';
-        
-        r_title.append(menu_dots, title_text);
-
-        const r_container   = document.createElement('div');
-        r_container.classList.add('ranking-container');
-        
-        const slot  = document.createElement('slot');
-
-        r_container.appendChild(slot);
-
-        const r_hold    = document.createElement('div');
-        r_hold.classList.add('hold');
-
-        r_hold.onmousedown  = () => this.draggable  = true;
-        r_hold.ontouchstart = () => this.draggable  = true;
-
-        r_line.append(r_title, r_container, r_hold);
-
-        return r_line;
+        return container_line;
     }
 
     getStyle() {
@@ -92,21 +54,23 @@ export class RankingLine extends HTMLElement {
             box-sizing: border-box;
         }
 
-        .ranking-line {
+        .container-line {
             display: grid;
             grid-template-columns: auto 1fr auto;
         }
 
-        .ranking-title {
+        .box-title {
             display: grid;
             grid-template-rows: auto 1fr;
             width: 5rem;
-            min-height: var(--item-size);
+            min-height: calc(var(--item-size) + .4rem);
             border: .1rem solid var(--cor-1);
             font-size: large;
+            text-shadow: 0 0 .2rem black;
+            cursor: pointer;
         }
         
-        .ranking-title > .menu_dots {
+        .box-title > .icon-dots {
             display: flex;
             justify-content: flex-start;
             align-items: flex-end;
@@ -114,7 +78,7 @@ export class RankingLine extends HTMLElement {
             overflow: hidden;
         }
 
-        .ranking-title > .title_text {
+        .box-title > .p-text {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -126,7 +90,7 @@ export class RankingLine extends HTMLElement {
             text-overflow: ellipsis;
         }
 
-        .ranking-container {
+        .box-items {
             display: grid;
             padding: .1rem;
             justify-content: space-around;
@@ -139,11 +103,32 @@ export class RankingLine extends HTMLElement {
         .hold {
             width: 2rem;
             border: .1rem solid var(--cor-1);
+            cursor: grab;
         }
         
         `;
 
         return style;
+    }
+    
+    createEvents() {
+        const box_title = this.shadowRoot.querySelector('.box-title');
+        const box_hold  = this.shadowRoot.querySelector('.hold');
+        
+        box_title.ondblclick  = () => {
+            const ranking_editor    = document.querySelector('ranking-editor');
+            ranking_editor.currentTarget    = this._id;
+        };
+
+        box_hold.onmousedown  = () => this.draggable  = true;
+        box_hold.ontouchstart = () => this.draggable  = true;
+        this.ondragstart    = this.dragStartEvent;
+        this.ondragend  = this.dragEndEvent;
+        this.ondragover = (ev) => this.dragOverEvent(ev);
+        this.ondrop = (ev) => {
+            ev.stopPropagation();
+            ev.preventDefault();
+        }
     }
 
     dragStartEvent(ev) {
@@ -166,6 +151,8 @@ export class RankingLine extends HTMLElement {
             ev.preventDefault();
             return;
         }
+        const color = this.dataset.color;
+        dragging.style.setProperty('--dragging-shadow', `${color && color !== 'transparent' ? color : 'white'}`);
 
         const newPosition   = this.getNewPosition(ev.clientX, ev.clientY);
 
@@ -193,5 +180,25 @@ export class RankingLine extends HTMLElement {
         }
 
         return null;
+    }
+    attributeChangedCallback(name, oldValue, newValue) {
+        if(this.isConnected && name === 'data-title') {
+            const p_text    = this.shadowRoot.querySelector('.p-text');
+            p_text.textContent  = newValue;
+        }
+
+        if(this.isConnected && name === 'data-color') {
+            const box_title = this.shadowRoot.querySelector('.box-title');
+            box_title.style.backgroundColor = newValue;
+        }
+    }
+
+    static get observedAttributes() {
+        return ['data-title','data-color'];
+    }
+
+    set boxTitleValues(new_value) {
+        this.dataset.title  = new_value['title'];
+        this.dataset.color  = new_value['color'] ?? 'transparent';
     }
 }
